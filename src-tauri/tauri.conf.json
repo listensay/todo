@@ -12,11 +12,11 @@
   "app": {
     "windows": [
       {
-        "title": "todo",
-        "width": 900,
+        "width": 500,
         "height": 700,
         "center": true,
-        "resizable": false
+        "resizable": false,
+        "title": "todo"
       }
     ],
     "security": {
