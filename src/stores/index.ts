@@ -4,5 +4,5 @@ import todoListSclice from './modules/todolist';
 export default configureStore({
   reducer: {
     todoList: todoListSclice
-  },
+  }
 });

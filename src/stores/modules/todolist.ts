@@ -7,22 +7,26 @@ export const todoListSlice = createSlice({
       {
         name: '学习React',
         status: 'todo',
-        type: "primary"
+        type: "primary",
+        created: "2023-09-09 10:33"
       },
       {
         name: '学习Vue',
         status: 'done',
-        type: "waring"
+        type: "waring",
+        created: "2023-09-09 10:33"
       },
       {
         name: '学习Angular',
         status: 'working',
-        type: "info"
+        type: "danger",
+        created: "2023-09-09 10:33"
       },
       {
         name: '学习Flutter',
         status: 'todo',
-        type: "success"
+        type: "success",
+        created: "2023-09-09 10:33"
       }
     ]
   },
