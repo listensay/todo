@@ -2,19 +2,17 @@ import TodoItem, { TodoItemProps } from "./TodoItem"
 
 export interface TodoListBoxProps {
   list: TodoItemProps[],
-  name: string
 }
 
 function TodoListBox(props: TodoListBoxProps) {
-  const { list, name } = props
+  const { list } = props
 
   return (
     <div className="min-h-96">
-    {/* <div className="mb-4 text-lg font-bold">{ name }</div> */}
       {
-        list.map((item: TodoItemProps) => {
-          return <TodoItem name={item.name} type={item.type} created={ item.created } key={item.name} />
-        })
+        list.length > 0 ? list.map((item: TodoItemProps) => {
+          return <TodoItem name={item.name} mark={item.mark} created={ item.updated_at } key={item.id} />
+        }) : <div className="flex items-center justify-center text-center text-gray-600 h-96">好耶没有内容 🤪</div>
       }
     </div>
   )

@@ -3,10 +3,20 @@ import { IconMenu2 } from "@tabler/icons-react";
 
 
 export interface TodoItemProps {
+  id?: number;
   name: string;
-  type: keyof Color;
-  status?: string;
+  status?: Status;
+  mark: keyof Color;
   created?: string;
+  updated_at?: string;
+  created_at?: string;
+}
+
+enum Status {
+  Incomplete = 'Incomplete',
+  Complete = 'Complete',
+  Pending = 'Pending',
+  Archived = "Archived"
 }
 
 export interface Color {
@@ -17,7 +27,7 @@ export interface Color {
 }
 
 function TodoItem(props: TodoItemProps) {
-  const { name, type, created } = props
+  const { name, mark, created } = props
 
   const colors : Color = {
     primary: "#8b5cf6",
@@ -32,7 +42,7 @@ function TodoItem(props: TodoItemProps) {
         <div className="flex items-center justify-between">
           <div>{ name }</div>
           <div>
-            <ColorSwatch color={ colors[type]  } />
+            <ColorSwatch color={ colors[mark]  } />
           </div>
         </div>
         {/* 按钮 */}
