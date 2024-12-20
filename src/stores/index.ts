@@ -1,8 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import todoListSclice from './modules/todolist';
+import todoListSclice from './modules/todos';
 
-export default configureStore({
+const store = configureStore({
   reducer: {
-    todoList: todoListSclice
+    todos: todoListSclice
   }
 });
+
+export default store
+export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>
