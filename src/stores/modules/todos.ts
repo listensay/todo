@@ -1,19 +1,23 @@
-import { fetchGetTodos } from '@/service';
+import { TodoItemProps } from '@/components/TodoItem';
+import { fetchAddTodo, fetchGetTodos } from '@/service';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 export const getTodos = createAsyncThunk('todos/getTodos', async () => {
-  return await fetchGetTodos()
+  const result = await fetchGetTodos()
+  console.log(result, 12312312)
+  return result
+})
+
+export const addTodo = createAsyncThunk('todos/addTodo', async (todo: TodoItemProps) => {
+  await fetchAddTodo(todo)
 })
 
 export const todoListSlice = createSlice({
   name: 'TodoList',
   initialState: {
-    list: []
+    list: [] as TodoItemProps[],
   },
   reducers: {
-    addTodo() {
-
-    }
   },
   extraReducers(builder) {
     builder
@@ -24,6 +28,6 @@ export const todoListSlice = createSlice({
 });
 
 // 为每个 case reducer 函数生成 Action creators
-export const { addTodo } = todoListSlice.actions;
+export const {  } = todoListSlice.actions;
 
 export default todoListSlice.reducer;
