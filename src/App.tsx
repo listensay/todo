@@ -30,7 +30,6 @@ function App() {
 
   const submit = (values : any) => {
     dispatch(addTodo(values))
-    dispatch(getTodos())
     form.reset()
     close()
   }

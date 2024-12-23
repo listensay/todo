@@ -1,15 +1,26 @@
 import { TodoItemProps } from '@/components/TodoItem';
-import { fetchAddTodo, fetchGetTodos } from '@/service';
+import { fetchAddTodo, fetchDeleteTodo, fetchGetTodos, fetchUpdateTodo } from '@/service';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 export const getTodos = createAsyncThunk('todos/getTodos', async () => {
   const result = await fetchGetTodos()
-  console.log(result, 12312312)
+  console.log(result)
   return result
 })
 
 export const addTodo = createAsyncThunk('todos/addTodo', async (todo: TodoItemProps) => {
   await fetchAddTodo(todo)
+  return await fetchGetTodos()
+})
+
+export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (id: number) => {
+  await fetchDeleteTodo(id)
+  return await fetchGetTodos()
+})
+
+export const updateTodo = createAsyncThunk('todos/updateTodo', async (todo: TodoItemProps) => {
+  await fetchUpdateTodo(todo)
+  return await fetchGetTodos()
 })
 
 export const todoListSlice = createSlice({
@@ -22,6 +33,15 @@ export const todoListSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(getTodos.fulfilled, (state, action) => {
+        state.list = <any> action.payload
+      })
+      .addCase(addTodo.fulfilled, (state, action) => {
+        state.list = <any> action.payload
+      })
+      .addCase(deleteTodo.fulfilled, (state, action) => {
+        state.list = <any> action.payload
+      })
+      .addCase(updateTodo.fulfilled, (state, action) => {
         state.list = <any> action.payload
       })
   },

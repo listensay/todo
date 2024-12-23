@@ -15,9 +15,9 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             add_todo,
-            get_todos
-            // update_todo,
-            // delete_todo
+            get_todos,
+            update_todo,
+            delete_todo
         ])
         .setup(|app| {
             tauri::async_runtime::block_on(async move {
@@ -122,30 +122,31 @@ async fn get_todos(state: tauri::State<'_, AppState>) -> Result<Vec<Todo>, Strin
     Ok(todos)
 }
 
-// #[tauri::command]
-// async fn update_todo(state: tauri::State<'_, AppState>, todo: Todo) -> Result<(), String> {
-//     let db = &state.db;
+#[tauri::command]
+async fn update_todo(state: tauri::State<'_, AppState>, todo: Todo) -> Result<(), String> {
+    let db = &state.db;
 
-//     sqlx::query("UPDATE todos SET description = ?1, status = ?2 WHERE id = ?3")
-//         .bind(todo.description)
-//         .bind(todo.status)
-//         .bind(todo.id)
-//         .execute(db)
-//         .await
-//         .map_err(|e| format!("could not update todo {}", e))?;
+    sqlx::query("UPDATE todos SET name = ?1, status = ?2, description = ?3, mark = ?4 WHERE id = ?5")
+        .bind(todo.name)
+        .bind(todo.status)
+        .bind(todo.description)
+        .bind(todo.mark)
+        .bind(todo.id)
+        .execute(db)
+        .await
+        .map_err(|e| format!("could not update todo {}", e))?;
+    Ok(())
+}
 
-//     Ok(())
-// }
+#[tauri::command]
+async fn delete_todo(state: tauri::State<'_, AppState>, id: u16) -> Result<(), String> {
+    let db = &state.db;
 
-// #[tauri::command]
-// async fn delete_todo(state: tauri::State<'_, AppState>, id: u16) -> Result<(), String> {
-//     let db = &state.db;
+    sqlx::query("DELETE FROM todos WHERE id = ?1")
+        .bind(id)
+        .execute(db)
+        .await
+        .map_err(|e| format!("could not delete todo {}", e))?;
 
-//     sqlx::query("DELETE FROM todos WHERE id = ?1")
-//         .bind(id)
-//         .execute(db)
-//         .await
-//         .map_err(|e| format!("could not delete todo {}", e))?;
-
-//     Ok(())
-// }
+    Ok(())
+}
