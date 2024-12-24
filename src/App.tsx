@@ -2,7 +2,7 @@ import { Button, ColorSwatch, Group, Modal, Select, SelectProps, Textarea, TextI
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect } from "react";
 import TodoList from "./components/TodoList";
-import { getTodos, addTodo } from "./stores/modules/todos";
+import { getTodos, addTodo } from "./stores/features/todos";
 import { useAppDispatch } from "./Hooks";
 import { useForm } from "@mantine/form";
 

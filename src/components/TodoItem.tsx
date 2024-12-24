@@ -1,5 +1,5 @@
 import { useAppDispatch } from "@/Hooks";
-import { deleteTodo, updateTodo } from "@/stores/modules/todos";
+import { deleteTodo, updateTodo } from "@/stores/features/todos";
 import { ActionIcon, ColorSwatch, Menu, Tooltip } from "@mantine/core";
 import { IconArchive, IconCircleDashedCheck, IconClockHour12, IconListDetails, IconMenu2, IconTrash } from "@tabler/icons-react";
 

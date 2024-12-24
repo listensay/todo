@@ -21,7 +21,7 @@ export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (id: number
 export const updateTodo = createAsyncThunk('todos/updateTodo', async (todo: TodoItemProps) => {
   await fetchUpdateTodo(todo)
   return await fetchGetTodos()
-})
+}) 
 
 export const todoListSlice = createSlice({
   name: 'TodoList',
@@ -32,22 +32,20 @@ export const todoListSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(getTodos.fulfilled, (state, action) => {
-        state.list = <any> action.payload
+      .addCase(getTodos.fulfilled, (state, { payload }) => {
+        state.list = payload as TodoItemProps[]
       })
-      .addCase(addTodo.fulfilled, (state, action) => {
-        state.list = <any> action.payload
+      .addCase(addTodo.fulfilled, (state, { payload }) => {
+        state.list = payload as TodoItemProps[]
       })
-      .addCase(deleteTodo.fulfilled, (state, action) => {
-        state.list = <any> action.payload
+      .addCase(deleteTodo.fulfilled, (state, { payload }) => {
+        state.list = payload as TodoItemProps[]
       })
-      .addCase(updateTodo.fulfilled, (state, action) => {
-        state.list = <any> action.payload
+      .addCase(updateTodo.fulfilled, (state, { payload }) => {
+        state.list = payload as TodoItemProps[]
       })
   },
 });
 
 // 为每个 case reducer 函数生成 Action creators
-export const {  } = todoListSlice.actions;
-
 export default todoListSlice.reducer;
