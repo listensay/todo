@@ -9,12 +9,15 @@ import '@mantine/notifications/styles.css';
 import { MantineProvider } from '@mantine/core';
 import './assets/css/tailwind.css'
 import { Notifications } from '@mantine/notifications';
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <Provider store={store}>
-    <MantineProvider>
-      <Notifications />
-      <App />
-    </MantineProvider>
-  </Provider>
+  <BrowserRouter>
+    <Provider store={store}>
+      <MantineProvider>
+        <Notifications />
+        <App />
+      </MantineProvider>
+    </Provider>
+  </BrowserRouter>
 );

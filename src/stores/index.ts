@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import todos from './features/todos'
+import { tabControlSlice } from './features/tab_control'
 
 const store = configureStore({
   reducer: {
     todos,
+    tabControl: tabControlSlice.reducer
   }
 })
 

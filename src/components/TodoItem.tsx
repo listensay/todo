@@ -1,7 +1,7 @@
 import { useAppDispatch } from "@/Hooks";
 import { deleteTodo, updateTodo } from "@/stores/features/todos";
 import { ActionIcon, ColorSwatch, Menu, Tooltip } from "@mantine/core";
-import { IconArchive, IconCircleDashedCheck, IconClockHour12, IconListDetails, IconMenu2, IconTrash } from "@tabler/icons-react";
+import { IconCircleDashedCheck, IconClockHour12, IconListDetails, IconMenu2, IconTrash } from "@tabler/icons-react";
 
 export interface TodoItemProps {
   id: number;
@@ -16,8 +16,7 @@ export interface TodoItemProps {
 enum Status {
   Incomplete = 'Incomplete',
   Complete = 'Complete',
-  Pending = 'Pending',
-  Archived = "Archived"
+  Pending = 'Pending'
 }
 
 export interface Color {
@@ -33,100 +32,143 @@ function TodoItem(props: TodoItemProps) {
 
   const colors : Color = {
     Primary: "#8b5cf6",
-    Waring: "#f97316",
+    Waring: "#fdba74",
     Success: "#5eead4",
-    Danger: "#dc2626",
+    Danger: "#fda4af",
   }
 
   const lables = [
     {
-      label: 'Incomplete',
+      label: '等待待办',
+      value: 'Incomplete',
       id: 1,
       icon: <IconListDetails size={16} />
     },
     {
-      label: 'Complete',
+      label: '完成待办',
+      value: 'Complete',
       id: 2,
       icon: <IconCircleDashedCheck size={16} />
     },
     {
-      label: 'Pending',
+      label: '计划待办',
+      value: 'Pending',
       id: 3,
       icon: <IconClockHour12 size={16} />
     },
     {
-      label: 'Archived',
-      id: 4,
-      icon: <IconArchive size={16} />
-    },
-    {
-      label: 'Delete',
+      label: '删除待办',
+      value: 'Delete',
       id: 5,
       icon: <IconTrash size={16} />
     }
   ]
 
-  const updateTemplate = (status: Status) => {
-    dispatch(updateTodo({
+  const updateTemplate = (todo: any) => {
+
+    const newObj = {
       id,
       name,
       status,
       mark,
       description,
       created_at,
-      updated_at: new Date().toISOString()
-    }))
+      updated_at: new Date().toISOString(),
+      ...todo
+    }
+
+    dispatch(updateTodo({ ...newObj }))
   }
 
-  const tabClickHandle = (lable: string) => {
-    switch(lable) {
+  const tabClickHandle = (value: string) => {
+    switch(value) {
       case 'Incomplete':
-        updateTemplate(Status.Incomplete)
+        updateTemplate({ status: Status.Incomplete })
         break;
       case 'Complete':
-        updateTemplate(Status.Complete)
+        updateTemplate({ status: Status.Complete })
         break;
       case 'Pending':
-        updateTemplate(Status.Pending)
-        break;
-      case 'Archived':
-        updateTemplate(Status.Archived)
+        updateTemplate({ status: Status.Pending })
         break;
       case 'Delete':
         dispatch(deleteTodo(id))
     }
   }
 
+  const colorLable = [
+    {
+      color: '#8b5cf6',
+      name: '紫色',
+      value: 'Primary'
+    },
+    {
+      color: '#fdba74',
+      name: '橙色',
+      value: 'Waring'
+    },
+    {
+      color: '#5eead4',
+      name: '绿色',
+      value: 'Success'
+    },
+    {
+      color: '#fda4af',
+      name: '粉色',
+      value: 'Danger'
+    }
+  ]
+
   return(
-    <Tooltip position="top-start" label={ description }>
-      <div className="p-4 mb-4 mr-2 bg-white border rounded-md last:mb-0">
+    <Tooltip position="bottom-start" label={ description }>
+      <div className="p-4 mb-4 text-white last:mb-0 app-card-ns" style={{ backgroundColor: colors[mark] }}>
         <div>
           <div className="flex items-center justify-between">
-            <div>{ name }</div>
-            <div>
-              <ColorSwatch color={ colors[mark]  } />
-            </div>
+            {
+              status === Status.Complete ? (
+                <div className="font-bold line-through ">{ name }</div>
+              ) : (
+                <div className="font-bold">{ name }</div>
+              )
+            }
           </div>
           {/* 按钮 */}
           <div className="flex items-center justify-between mt-3">
-            <div className="text-sm text-gray-400">{ updated_at }</div>
+            <div className="text-sm">{ updated_at }</div>
             <Menu transitionProps={{ transition: 'rotate-right', duration: 150 }}>
               {/* Menu content */}
               <Menu.Target>
-                <ActionIcon variant="light" size="sm">
+                <ActionIcon
+                  size="sm"
+                  variant="white"
+                  color="cyan"
+                >
                   <IconMenu2 />
                 </ActionIcon>
               </Menu.Target>
               <Menu.Dropdown>
+                <Menu.Label>标签颜色</Menu.Label>
+                {
+                  colorLable.map((color) => (
+                    <Menu.Item 
+                      key={color.name}
+                      leftSection={ <ColorSwatch color={ color.color } size={15} /> }
+                      onClick = { () => updateTemplate({ mark: color.value }) }
+                    >
+                      { color.name }
+                    </Menu.Item>
+                  ))
+                }
+                <Menu.Label>更新</Menu.Label>
                 {
                   lables.map((tab) => (
-                    status !== tab.label && (
+                    status !== tab.value && (
                       <div key={tab.id}>
-                        { tab.label === 'Delete' && <Menu.Divider key={tab.id}  /> }
+                        { tab.value === 'Delete' && <Menu.Divider key={tab.id}  /> }
                         <Menu.Item 
                           leftSection={ tab.icon } 
-                          color={ tab.label === 'Delete' ? 'red' : '' }
-                          onClick = { () => tabClickHandle(tab.label) }
+                          color={ tab.value === 'Delete' ? 'red' : '' }
+                          onClick = { () => tabClickHandle(tab.value) }
                         >
                           { tab.label }
                         </Menu.Item>
@@ -134,6 +176,7 @@ function TodoItem(props: TodoItemProps) {
                     )
                   ))
                 }
+
               </Menu.Dropdown>
             </Menu>
           </div>

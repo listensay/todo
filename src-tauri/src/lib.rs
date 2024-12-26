@@ -79,7 +79,6 @@ enum TodoStatus {
     Incomplete,
     Complete,
     Pending,
-    Archived,
 }
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]
@@ -113,7 +112,7 @@ async fn add_todo(state: tauri::State<'_, AppState>, name: &str, description: &s
 async fn get_todos(state: tauri::State<'_, AppState>) -> Result<Vec<Todo>, String> {
     let db = &state.db;
 
-    let todos: Vec<Todo> = sqlx::query_as::<_, Todo>("SELECT * FROM todos")
+    let todos: Vec<Todo> = sqlx::query_as::<_, Todo>("SELECT * FROM todos order by created_at DESC")
         .fetch(db)
         .try_collect()
         .await
