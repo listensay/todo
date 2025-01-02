@@ -119,6 +119,25 @@ function TodoItem(props: TodoItemProps) {
     }
   ]
 
+  const getPastTime = (time: string) => {
+    const date = new Date(time)
+    const now = new Date()
+    const diff = now.getTime() - date.getTime()
+    const days = Math.floor(diff / (24 * 3600 * 1000))
+    const hours = Math.floor(diff / (3600 * 1000))
+    const minutes = Math.floor(diff / (60 * 1000))
+    const seconds = Math.floor(diff / 1000)
+    if (days > 0) {
+      return `${days} 天`
+    } else if (hours > 0) {
+      return `${hours} 小时`
+    } else if (minutes > 0) {
+      return `${minutes} 分钟`
+    } else {
+      return `${seconds} 秒`
+    }
+  }
+
   return(
     <Tooltip position="bottom-start" label={ description }>
       <div className="p-4 mb-4 text-white last:mb-0 app-card-ns" style={{ backgroundColor: colors[mark] }}>
@@ -134,7 +153,10 @@ function TodoItem(props: TodoItemProps) {
           </div>
           {/* 按钮 */}
           <div className="flex items-center justify-between mt-3">
-            <div className="text-sm">{ updated_at }</div>
+            <div className="text-sm">
+              <span>{ updated_at }</span>
+              <span className="ml-2">距离创建时间已过去: { getPastTime(updated_at as string) }</span>
+            </div>
             <Menu transitionProps={{ transition: 'rotate-right', duration: 150 }}>
               {/* Menu content */}
               <Menu.Target>

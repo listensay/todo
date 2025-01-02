@@ -2,6 +2,7 @@ use futures::TryStreamExt;
 use serde::{Deserialize, Serialize};
 use sqlx::{migrate::MigrateDatabase, prelude::FromRow, sqlite::SqlitePoolOptions, Pool, Sqlite};
 use tauri::{App, Manager as _};
+use chrono::Local;
 
 type Db = Pool<Sqlite>;
 
@@ -96,11 +97,16 @@ struct Todo {
 async fn add_todo(state: tauri::State<'_, AppState>, name: &str, description: &str, mark: &str) -> Result<(), String> {
     let db = &state.db;
 
-    sqlx::query("INSERT INTO todos (name, status, description, mark) VALUES (?1, ?2, ?3, ?4)")
+    // 获取当前本地时间
+    let current_time = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
+
+    sqlx::query("INSERT INTO todos (name, status, description, mark, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6)")
         .bind(name)
         .bind(TodoStatus::Incomplete)
         .bind(description)
         .bind(mark)
+        .bind(&current_time) // 设置 created_at
+        .bind(&current_time) // 设置 updated_at
         .execute(db)
         .await
         .map_err(|e| format!("Error saving todo: {}", e))?;
