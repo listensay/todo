@@ -119,7 +119,7 @@ function TodoItem(props: TodoItemProps) {
     }
   ]
 
-  const getPastTime = (time: string) => {
+  const getPastTime = (time: any) => {
     const date = new Date(time)
     const now = new Date()
     const diff = now.getTime() - date.getTime()
@@ -150,12 +150,18 @@ function TodoItem(props: TodoItemProps) {
                 <div className="font-bold">{ name }</div>
               )
             }
+            {
+              status === Status.Complete ? (
+                <span className="ml-2 font-bold">完成于 { getPastTime(updated_at) } 前</span>
+              ) : (
+                <span className="ml-2 font-bold">创建于 <span className="text-red-500">{ getPastTime(created_at) }</span> 前</span>
+              )
+            }
           </div>
           {/* 按钮 */}
           <div className="flex items-center justify-between mt-3">
             <div className="text-sm">
               <span>{ updated_at }</span>
-              <span className="ml-2">距离创建时间已过去: { getPastTime(updated_at as string) }</span>
             </div>
             <Menu transitionProps={{ transition: 'rotate-right', duration: 150 }}>
               {/* Menu content */}
