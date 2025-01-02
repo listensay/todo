@@ -1,3 +1,4 @@
+import Empty from "./Empty"
 import TodoItem, { TodoItemProps } from "./TodoItem"
 
 export interface TodoListBoxProps {
@@ -12,7 +13,7 @@ function TodoListBox(props: TodoListBoxProps) {
       {
         list.length > 0 ? list.map((item: TodoItemProps) => {
           return <TodoItem { ...item } key={item.id} />
-        }) : <div className="flex items-center justify-center text-center text-gray-600 h-96">好耶没有内容 🤪</div>
+        }) : <div className="flex items-center justify-center text-center text-gray-600 h-96"><Empty /></div>
       }
     </div>
   )

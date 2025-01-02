@@ -8,6 +8,7 @@ export const fetchGetTodos = async () => {
     return result
   } catch (error) {
     console.log('获取数据失败')
+    return []
   }
 }
 

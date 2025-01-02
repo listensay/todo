@@ -5,6 +5,7 @@ import TodoListBox from "./TodoListBox"
 function TodoList() {
   const { list } = useSelector((state: any) => state.todos)
   const {tabs, currentTab} = useSelector((state: any) => state.tabControl)
+  console.log('list', list)
 
   return (
     <>
