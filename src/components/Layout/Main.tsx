@@ -6,11 +6,11 @@ import { useForm } from "@mantine/form";
 import { Button, Group, Select, SelectProps, TextInput } from "@mantine/core";
 
 
-function MainLayoutRight() {
-  const dispatch = useAppDispatch()
+function LayoutMain() {
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(getTodos())
-  }, [dispatch])
+    dispatch(getTodos());
+  }, [dispatch]);
 
   const form = useForm({
     mode: "uncontrolled",
@@ -20,54 +20,64 @@ function MainLayoutRight() {
     },
     validate: {
       name: (value) => (value.length < 2 ? "请输入任务名称" : null),
-      difficulty: (value) =>
-        value.length < 2 ? "Mark must have at least 2 letters" : null,
+      difficulty: (value) => (value.length < 2 ? "请选择任务难度" : null),
     },
   });
 
-  const submit = (values : any) => {
-    dispatch(addTodo(values))
-    form.reset()
-  }
+  const submit = (values: any) => {
+    dispatch(addTodo({
+      ...values,
+      description: '' // 快速添加时使用空描述
+    }));
+    form.reset();
+  };
 
-  const renderSelectOption: SelectProps['renderOption'] = ({ option, checked }) => (
+  const renderSelectOption: SelectProps["renderOption"] = ({
+    option,
+    checked,
+  }) => (
     <Group flex="1" gap="xs">
       {option.label}
       {checked && <span>✅</span>}
     </Group>
   );
-  
+
   return (
     <>
       {/* 搜索框 */}
       <div className="flex items-center justify-between mb-4">
-        <form className="flex items-center justify-center" onSubmit={form.onSubmit((values) => submit(values))}>
-          <TextInput 
+        <form
+          className="flex items-center justify-center"
+          onSubmit={form.onSubmit((values) => submit(values))}
+        >
+          <TextInput
             placeholder="输入新任务"
             className="mr-2 w-72"
-            { ...form.getInputProps('name') }
-            withAsterisk 
+            {...form.getInputProps("name")}
+            withAsterisk
           />
           <Select
             placeholder="难度"
             className="w-40 mr-2"
             data={[
-              { value: 'Easy', label: '简单 +10 EXP' },
-              { value: 'Normal', label: '普通 +25 EXP' },
-              { value: 'Hard', label: '困难 +50 EXP' },
-              { value: 'Ipossible', label: '最难 +100 EXP' },
+              { value: "Easy", label: "简单 +10 EXP" },
+              { value: "Normal", label: "普通 +25 EXP" },
+              { value: "Hard", label: "困难 +50 EXP" },
+              { value: "Ipossible", label: "最难 +100 EXP" },
             ]}
             renderOption={renderSelectOption}
-            { ...form.getInputProps('difficulty') }
+            {...form.getInputProps("difficulty")}
             withAsterisk
           />
-          <Button type="submit" className="app-card-ns" color="red">添加待办</Button>
+          <Button type="submit" className="app-card-ns" color="red">
+            添加待办
+          </Button>
         </form>
       </div>
       {/* TODO列表 */}
       <TodoList />
     </>
-  )
+  );
 }
 
-export default MainLayoutRight
+export default LayoutMain;

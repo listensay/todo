@@ -1,8 +1,5 @@
 import { TypeTodoItemProps } from "@/types/todo";
 
-// Re-export for convenience
-export type { TypeTodoItemProps as TodoItemProps };
-
 function TodoItem(props: TypeTodoItemProps) {
   const { name, created_at, updated_at } = props;
 

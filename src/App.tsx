@@ -1,5 +1,5 @@
-import LayoutMain from "./components/Layouts/Main";
-import LayoutSide from "./components/Layouts/Side";
+import LayoutMain from "./components/Layout/Main";
+import LayoutSide from "./components/Layout/Side";
 
 function App() {
 
