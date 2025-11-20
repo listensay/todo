@@ -1,7 +1,7 @@
-import { TypeTodoItemProps } from "@/types/todo";
+import { DIFFICULTY_CONFIG, TypeTodoItemProps } from "@/types/todo";
 
 function TodoItem(props: TypeTodoItemProps) {
-  const { name, created_at, updated_at } = props;
+  const { name, created_at, updated_at, difficulty } = props;
 
   // 时间简化
   const getPastTime = (time: any) => {
@@ -24,7 +24,10 @@ function TodoItem(props: TypeTodoItemProps) {
   };
 
   return (
-    <div className="p-4 mb-4 last:mb-0 app-card-ns">
+    <div
+      className={`p-4 mb-4 last:mb-0 app-card-ns`}
+      style={{ backgroundColor: DIFFICULTY_CONFIG[difficulty].color }}
+    >
       <div className="flex items-center justify-between">
         <div className="font-bold">{name}</div>
         <span className="ml-2 font-bold">
@@ -32,7 +35,7 @@ function TodoItem(props: TypeTodoItemProps) {
           <span className="mx-2 text-red-500">
             {getPastTime(created_at)}
           </span>{" "}
-          前
+          前{difficulty}
         </span>
       </div>
       <div className="flex items-center justify-between mt-3">

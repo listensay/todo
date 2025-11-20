@@ -4,6 +4,7 @@ import { getTodos, addTodo } from "@/stores/features/todos";
 import { useAppDispatch } from "@/Hooks/index";
 import { useForm } from "@mantine/form";
 import { Button, Group, Select, SelectProps, TextInput } from "@mantine/core";
+import { DIFFICULTY_CONFIG } from "@/types/todo";
 
 
 function LayoutMain() {
@@ -42,6 +43,12 @@ function LayoutMain() {
     </Group>
   );
 
+  // 从配置生成选项
+  const difficultyOptions = Object.entries(DIFFICULTY_CONFIG).map(([key, config]) => ({
+    value: key,
+    label: `${config.label} +${config.exp} EXP`
+  }));
+
   return (
     <>
       {/* 搜索框 */}
@@ -59,12 +66,7 @@ function LayoutMain() {
           <Select
             placeholder="难度"
             className="w-40 mr-2"
-            data={[
-              { value: "Easy", label: "简单 +10 EXP" },
-              { value: "Normal", label: "普通 +25 EXP" },
-              { value: "Hard", label: "困难 +50 EXP" },
-              { value: "Ipossible", label: "最难 +100 EXP" },
-            ]}
+            data={difficultyOptions}
             renderOption={renderSelectOption}
             {...form.getInputProps("difficulty")}
             withAsterisk
