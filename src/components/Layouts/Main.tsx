@@ -13,16 +13,17 @@ function MainLayoutRight() {
   }, [dispatch])
 
   const form = useForm({
-    mode: 'uncontrolled',
+    mode: "uncontrolled",
     initialValues: {
-      name: '',
-      mark: ''
+      name: "",
+      difficulty: "",
     },
     validate: {
-      name: (value) => value.length < 2 ? 'Name must have at least 2 letters' : null,
-      mark: (value) => value.length < 2 ? 'Mark must have at least 2 letters' : null,
-    }
-  })
+      name: (value) => (value.length < 2 ? "请输入任务名称" : null),
+      difficulty: (value) =>
+        value.length < 2 ? "Mark must have at least 2 letters" : null,
+    },
+  });
 
   const submit = (values : any) => {
     dispatch(addTodo(values))

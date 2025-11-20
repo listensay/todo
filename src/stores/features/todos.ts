@@ -1,4 +1,4 @@
-import { TodoItemProps } from '@/components/TodoItem';
+import { TodoItemProps } from '@/types/todo';
 import { fetchAddTodo, fetchDeleteTodo, fetchGetTodos, fetchUpdateTodo } from '@/service';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 

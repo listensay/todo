@@ -88,23 +88,23 @@ struct Todo {
     name: String,
     status: TodoStatus,
     description: String,
-    mark: String,
+    difficulty: String,
     created_at: String,
     updated_at: String
 }
 
 #[tauri::command]
-async fn add_todo(state: tauri::State<'_, AppState>, name: &str, description: &str, mark: &str) -> Result<(), String> {
+async fn add_todo(state: tauri::State<'_, AppState>, name: &str, description: &str, difficulty: &str) -> Result<(), String> {
     let db = &state.db;
 
     // 获取当前本地时间
     let current_time = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
 
-    sqlx::query("INSERT INTO todos (name, status, description, mark, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6)")
+    sqlx::query("INSERT INTO todos (name, status, description, difficulty, created_at, updated_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6)")
         .bind(name)
         .bind(TodoStatus::Incomplete)
         .bind(description)
-        .bind(mark)
+        .bind(difficulty)
         .bind(&current_time) // 设置 created_at
         .bind(&current_time) // 设置 updated_at
         .execute(db)
@@ -131,11 +131,11 @@ async fn get_todos(state: tauri::State<'_, AppState>) -> Result<Vec<Todo>, Strin
 async fn update_todo(state: tauri::State<'_, AppState>, todo: Todo) -> Result<(), String> {
     let db = &state.db;
 
-    sqlx::query("UPDATE todos SET name = ?1, status = ?2, description = ?3, mark = ?4 WHERE id = ?5")
+    sqlx::query("UPDATE todos SET name = ?1, status = ?2, description = ?3, difficulty = ?4 WHERE id = ?5")
         .bind(todo.name)
         .bind(todo.status)
         .bind(todo.description)
-        .bind(todo.mark)
+        .bind(todo.difficulty)
         .bind(todo.id)
         .execute(db)
         .await
