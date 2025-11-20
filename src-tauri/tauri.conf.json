@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "todo",
+  "version": "0.1.0",
+  "identifier": "com.todo.app",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "width": 900,
+        "height": 700,
+        "center": true,
+        "resizable": false,
+        "title": "ToDo",
+        "backgroundColor": "#F2F2EA",
+        "hiddenTitle": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32.png",
+      "icons/128.png",
+      "icons/128@2x.png",
+      "icons/128.icns",
+      "icons/128.ico"
+    ]
+  }
+}

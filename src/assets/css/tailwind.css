@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #ede9fe;
+  background-image: linear-gradient(90deg,#fff1f2 5%, rgba(0, 0, 0, 0) 5%), linear-gradient(#fff1f2 5%, rgba(0, 0, 0, 0) 5%);
+  background-size: 20px 20px;
+  font-size: larger;
+  /* font-family: 'pixfonts'; */
+  color: #000;
+}
+
+.app-card {
+  box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 1);
+  @apply border-2 border-black;
+}
+
+.app-card-ns {
+  @apply border-2 border-black;
+}
+
+/* 滚动槽 */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+@font-face {
+  font-family: "pixfonts";
+  src:
+    url("../fonts/pix/fusion-pixel-10px-proportional-zh_hans.ttf.woff")
+    url("../fonts/pix/fusion-pixel-10px-proportional-ja.ttf.woff") format("woff"),
+    url("../fonts/pix/fusion-pixel-10px-proportional-ko.ttf.woff") format("woff"),
+    url("../fonts/pix/fusion-pixel-10px-proportional-latin.ttf.woff") format("woff"),
+    url("../fonts/pix/fusion-pixel-10px-proportional-zh_hant.ttf.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
