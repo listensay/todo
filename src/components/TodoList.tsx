@@ -1,22 +1,25 @@
 import { useSelector } from "react-redux";
+import { useMemo, memo } from "react";
 import TodoListBox from "./TodoListBox";
 import { TypeTodoItemProps } from "@/types/todo";
 
 function TodoList() {
-  const { list } = useSelector((state: any) => state.todos);
-  console.log("list", list);
+  // 只选择 list，而不是整个 todos 对象
+  const list = useSelector((state: any) => state.todos.list);
+
+  // 使用 useMemo 缓存过滤结果
+  const filteredList = useMemo(() => {
+    console.log("list", list);
+    return list.filter((item: TypeTodoItemProps) => item.status);
+  }, [list]);
 
   return (
     <>
       <div className="w-full overflow-y-scroll h-[565px]">
-        {
-          <TodoListBox
-            list={list.filter((item: TypeTodoItemProps) => item.status)}
-          />
-        }
+        <TodoListBox list={filteredList} />
       </div>
     </>
   );
 }
 
-export default TodoList;
+export default memo(TodoList);

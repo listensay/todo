@@ -1,5 +1,6 @@
 import { Timeline, Text } from '@mantine/core';
 import { useSelector } from 'react-redux';
+import { memo } from 'react';
 import { TypeTodoItemProps } from "@/types/todo";
 
 function LayoutSide() {
@@ -23,7 +24,7 @@ function LayoutSide() {
         <Timeline bulletSize={24} lineWidth={2} className="pr-2">
           {todos.map((todo: TypeTodoItemProps) => {
             return (
-              <Timeline.Item bullet={getIcon(todo.status)} title={todo.status}>
+              <Timeline.Item key={todo.id} bullet={getIcon(todo.status)} title={todo.status}>
                 <Text className="my-2" size="sm">
                   {todo.name}
                 </Text>
@@ -37,4 +38,5 @@ function LayoutSide() {
   );
 }
 
-export default LayoutSide;
+// 使用 memo 优化性能
+export default memo(LayoutSide);
