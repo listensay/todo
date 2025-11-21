@@ -1,4 +1,4 @@
-import { TodoItemProps } from '@/types/todo';
+import { TypeTodoItemProps } from '@/types/todo';
 import { fetchAddTodo, fetchDeleteTodo, fetchGetTodos, fetchUpdateTodo } from '@/service';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
@@ -8,7 +8,7 @@ export const getTodos = createAsyncThunk('todos/getTodos', async () => {
   return result
 })
 
-export const addTodo = createAsyncThunk('todos/addTodo', async (todo: TodoItemProps) => {
+export const addTodo = createAsyncThunk('todos/addTodo', async (todo: TypeTodoItemProps) => {
   await fetchAddTodo(todo)
   return await fetchGetTodos()
 })
@@ -18,7 +18,7 @@ export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (id: number
   return await fetchGetTodos()
 })
 
-export const updateTodo = createAsyncThunk('todos/updateTodo', async (todo: TodoItemProps) => {
+export const updateTodo = createAsyncThunk('todos/updateTodo', async (todo: TypeTodoItemProps) => {
   await fetchUpdateTodo(todo)
   return await fetchGetTodos()
 }) 
@@ -26,23 +26,23 @@ export const updateTodo = createAsyncThunk('todos/updateTodo', async (todo: Todo
 export const todoListSlice = createSlice({
   name: 'TodoList',
   initialState: {
-    list: [] as TodoItemProps[],
+    list: [] as TypeTodoItemProps[],
   },
   reducers: {
   },
   extraReducers(builder) {
     builder
       .addCase(getTodos.fulfilled, (state, { payload }) => {
-        state.list = payload as TodoItemProps[]
+        state.list = payload as TypeTodoItemProps[]
       })
       .addCase(addTodo.fulfilled, (state, { payload }) => {
-        state.list = payload as TodoItemProps[]
+        state.list = payload as TypeTodoItemProps[]
       })
       .addCase(deleteTodo.fulfilled, (state, { payload }) => {
-        state.list = payload as TodoItemProps[]
+        state.list = payload as TypeTodoItemProps[]
       })
       .addCase(updateTodo.fulfilled, (state, { payload }) => {
-        state.list = payload as TodoItemProps[]
+        state.list = payload as TypeTodoItemProps[]
       })
   },
 });

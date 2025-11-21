@@ -8,9 +8,6 @@ export interface TypeTodoItemProps {
   created_at?: string;
 }
 
-// Alias for backward compatibility
-export type TodoItemProps = TypeTodoItemProps;
-
 enum TypeEnumStatus {
   Incomplete = "Incomplete",
   Complete = "Complete",
