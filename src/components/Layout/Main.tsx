@@ -14,7 +14,7 @@ function LayoutMain() {
   }, [dispatch]);
 
   const form = useForm({
-    mode: "uncontrolled",
+    mode: "controlled",
     initialValues: {
       name: "",
       difficulty: "",
