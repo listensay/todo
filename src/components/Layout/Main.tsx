@@ -1,5 +1,5 @@
 import TodoList from "@/components/TodoList";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getTodos, addTodo } from "@/stores/features/todos";
 import { useAppDispatch } from "@/Hooks/index";
 import { useForm } from "@mantine/form";
@@ -9,6 +9,8 @@ import { DIFFICULTY_CONFIG } from "@/types/todo";
 
 function LayoutMain() {
   const dispatch = useAppDispatch();
+  const [formKey, setFormKey] = useState(0);
+
   useEffect(() => {
     dispatch(getTodos());
   }, [dispatch]);
@@ -28,6 +30,8 @@ function LayoutMain() {
   const submit = (values: any) => {
     dispatch(addTodo(values));
     form.reset();
+    // 通过改变 key 强制重新渲染表单
+    setFormKey(prev => prev + 1);
   };
 
   const renderSelectOption: SelectProps["renderOption"] = ({
@@ -61,6 +65,7 @@ function LayoutMain() {
             withAsterisk
           />
           <Select
+            key={formKey}
             placeholder="难度"
             className="w-40 mr-2"
             data={difficultyOptions}
