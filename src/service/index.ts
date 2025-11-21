@@ -23,7 +23,6 @@ export const fetchAddTodo = async (todo: TypeTodoItemProps) => {
   try {
     const result = await invoke('add_todo', {
       name: todo.name,
-      description: todo.description || '',
       difficulty: todo.difficulty
     })
     notifications.show({

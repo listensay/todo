@@ -26,10 +26,7 @@ function LayoutMain() {
   });
 
   const submit = (values: any) => {
-    dispatch(addTodo({
-      ...values,
-      description: '' // 快速添加时使用空描述
-    }));
+    dispatch(addTodo(values));
     form.reset();
   };
 

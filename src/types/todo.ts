@@ -3,7 +3,6 @@ export interface TypeTodoItemProps {
   name: string;
   status: TypeEnumStatus;
   difficulty: keyof TypeDifficulty;
-  description: string;
   updated_at?: string;
   created_at?: string;
 }

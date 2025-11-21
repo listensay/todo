@@ -13,11 +13,11 @@ body {
 
 .app-card {
   box-shadow: 4px 4px 0 0 rgba(0, 0, 0, 1);
-  @apply border-2 border-black;
+  @apply border-2 border-black rounded-none;
 }
 
 .app-card-ns {
-  @apply border-2 border-black;
+  @apply border-2 border-black rounded-none;
 }
 
 /* 滚动槽 */
