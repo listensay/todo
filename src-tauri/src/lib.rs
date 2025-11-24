@@ -18,7 +18,10 @@ pub fn run() {
             add_todo,
             get_todos,
             update_todo,
-            delete_todo
+            delete_todo,
+            get_player,
+            update_player,
+            add_exp
         ])
         .setup(|app| {
             tauri::async_runtime::block_on(async move {
@@ -151,4 +154,91 @@ async fn delete_todo(state: tauri::State<'_, AppState>, id: u16) -> Result<(), S
         .map_err(|e| format!("could not delete todo {}", e))?;
 
     Ok(())
+}
+
+// ==================== Player System ====================
+
+#[derive(Debug, Serialize, Deserialize, FromRow)]
+struct Player {
+    id: u8,
+    nickname: String,
+    avatar: String,
+    level: u16,
+    exp: u32,
+    total_tasks_completed: u32,
+    streak_days: u16,
+    last_login_date: Option<String>,
+    coins: u32,
+    title: String,
+    created_at: String,
+    updated_at: String,
+}
+
+#[tauri::command]
+async fn get_player(state: tauri::State<'_, AppState>) -> Result<Player, String> {
+    let db = &state.db;
+
+    let player: Player = sqlx::query_as::<_, Player>("SELECT * FROM player WHERE id = 1")
+        .fetch_one(db)
+        .await
+        .map_err(|e| format!("Failed to get player: {}", e))?;
+
+    Ok(player)
+}
+
+#[tauri::command]
+async fn update_player(state: tauri::State<'_, AppState>, player: Player) -> Result<(), String> {
+    let db = &state.db;
+
+    let current_time = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
+
+    sqlx::query("UPDATE player SET nickname = ?1, avatar = ?2, level = ?3, exp = ?4, total_tasks_completed = ?5, streak_days = ?6, last_login_date = ?7, coins = ?8, title = ?9, updated_at = ?10 WHERE id = 1")
+        .bind(player.nickname)
+        .bind(player.avatar)
+        .bind(player.level)
+        .bind(player.exp)
+        .bind(player.total_tasks_completed)
+        .bind(player.streak_days)
+        .bind(player.last_login_date)
+        .bind(player.coins)
+        .bind(player.title)
+        .bind(current_time)
+        .execute(db)
+        .await
+        .map_err(|e| format!("Failed to update player: {}", e))?;
+
+    Ok(())
+}
+
+#[tauri::command]
+async fn add_exp(state: tauri::State<'_, AppState>, exp_amount: u32) -> Result<Player, String> {
+    let db = &state.db;
+
+    // 获取当前玩家
+    let mut player: Player = sqlx::query_as::<_, Player>("SELECT * FROM player WHERE id = 1")
+        .fetch_one(db)
+        .await
+        .map_err(|e| format!("Failed to get player: {}", e))?;
+
+    // 增加经验值
+    player.exp += exp_amount;
+
+    // 计算升级 (简单升级公式：每级需要 level * 100 经验)
+    let exp_for_next_level = (player.level as u32) * 100;
+    if player.exp >= exp_for_next_level {
+        player.level += 1;
+        player.exp -= exp_for_next_level;
+    }
+
+    // 更新数据库
+    let current_time = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
+    sqlx::query("UPDATE player SET level = ?1, exp = ?2, updated_at = ?3 WHERE id = 1")
+        .bind(player.level)
+        .bind(player.exp)
+        .bind(current_time)
+        .execute(db)
+        .await
+        .map_err(|e| format!("Failed to update player exp: {}", e))?;
+
+    Ok(player)
 }

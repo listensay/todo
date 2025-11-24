@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import todos from './features/todos'
+import player from './features/player'
 
 const store = configureStore({
   reducer: {
     todos,
+    player,
   }
 })
 

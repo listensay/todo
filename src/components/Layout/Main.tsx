@@ -6,7 +6,6 @@ import { useForm } from "@mantine/form";
 import { Button, Group, Select, SelectProps, TextInput } from "@mantine/core";
 import { DIFFICULTY_CONFIG } from "@/types/todo";
 
-
 function LayoutMain() {
   const dispatch = useAppDispatch();
   const [formKey, setFormKey] = useState(0);
@@ -31,7 +30,7 @@ function LayoutMain() {
     dispatch(addTodo(values));
     form.reset();
     // 通过改变 key 强制重新渲染表单
-    setFormKey(prev => prev + 1);
+    setFormKey((prev) => prev + 1);
   };
 
   const renderSelectOption: SelectProps["renderOption"] = ({
@@ -45,14 +44,15 @@ function LayoutMain() {
   );
 
   // 从配置生成选项
-  const difficultyOptions = Object.entries(DIFFICULTY_CONFIG).map(([key, config]) => ({
-    value: key,
-    label: `${config.label} +${config.exp} EXP`
-  }));
+  const difficultyOptions = Object.entries(DIFFICULTY_CONFIG).map(
+    ([key, config]) => ({
+      value: key,
+      label: `${config.label} +${config.exp} EXP`,
+    })
+  );
 
   return (
     <>
-      {/* 搜索框 */}
       <div className="flex items-center justify-between mb-4">
         <form
           className="flex items-center justify-center"

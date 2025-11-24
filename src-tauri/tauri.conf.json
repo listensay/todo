@@ -12,8 +12,8 @@
   "app": {
     "windows": [
       {
-        "width": 900,
-        "height": 700,
+        "width": 1200,
+        "height": 800,
         "center": true,
         "resizable": false,
         "title": "ToDo",
