@@ -20,11 +20,15 @@ function LayoutSide() {
   return (
     <div className="p-4">
       <div className="mb-4 text-lg font-bold">动态</div>
-      <div className="overflow-y-scroll h-[550px]">
+      <div className="overflow-y-scroll h-[600px]">
         <Timeline bulletSize={24} lineWidth={2} className="pr-2">
           {todos.map((todo: TypeTodoItemProps) => {
             return (
-              <Timeline.Item key={todo.id} bullet={getIcon(todo.status)} title={todo.status}>
+              <Timeline.Item
+                key={todo.id}
+                bullet={getIcon(todo.status)}
+                title={todo.status}
+              >
                 <Text className="my-2" size="sm">
                   {todo.name}
                 </Text>

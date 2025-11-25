@@ -8,8 +8,18 @@ export const fetchGetPlayer = async (): Promise<Player | null> => {
     return result;
   } catch (error) {
     console.log('获取玩家信息失败', error);
+    return null;
+  }
+};
+
+export const fetchCreatePlayer = async (nickname: string, avatar: string): Promise<Player | null> => {
+  try {
+    const result = await invoke<Player>('create_player', { nickname, avatar });
+    return result;
+  } catch (error) {
+    console.log('创建玩家失败', error);
     notifications.show({
-      title: '获取玩家信息失败',
+      title: '创建角色失败',
       message: `Error: ${error}`,
       color: 'red',
       autoClose: 3000,

@@ -20,8 +20,11 @@ pub fn run() {
             update_todo,
             delete_todo,
             get_player,
+            create_player,
             update_player,
-            add_exp
+            add_exp,
+            get_config,
+            update_config
         ])
         .setup(|app| {
             tauri::async_runtime::block_on(async move {
@@ -187,6 +190,30 @@ async fn get_player(state: tauri::State<'_, AppState>) -> Result<Player, String>
 }
 
 #[tauri::command]
+async fn create_player(state: tauri::State<'_, AppState>, nickname: &str, avatar: &str) -> Result<Player, String> {
+    let db = &state.db;
+
+    let current_time = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
+
+    sqlx::query("INSERT INTO player (id, nickname, avatar, level, exp, total_tasks_completed, streak_days, coins, title, created_at, updated_at) VALUES (1, ?1, ?2, 1, 0, 0, 0, 0, '新手冒险者', ?3, ?4)")
+        .bind(nickname)
+        .bind(avatar)
+        .bind(&current_time)
+        .bind(&current_time)
+        .execute(db)
+        .await
+        .map_err(|e| format!("Failed to create player: {}", e))?;
+
+    // 获取刚创建的玩家
+    let player: Player = sqlx::query_as::<_, Player>("SELECT * FROM player WHERE id = 1")
+        .fetch_one(db)
+        .await
+        .map_err(|e| format!("Failed to get created player: {}", e))?;
+
+    Ok(player)
+}
+
+#[tauri::command]
 async fn update_player(state: tauri::State<'_, AppState>, player: Player) -> Result<(), String> {
     let db = &state.db;
 
@@ -241,4 +268,45 @@ async fn add_exp(state: tauri::State<'_, AppState>, exp_amount: u32) -> Result<P
         .map_err(|e| format!("Failed to update player exp: {}", e))?;
 
     Ok(player)
+}
+
+// ==================== Config System ====================
+
+#[derive(Debug, Serialize, Deserialize, FromRow)]
+struct Config {
+    id: u32,
+    key: String,
+    value: String,
+    created_at: String,
+    updated_at: String,
+}
+
+#[tauri::command]
+async fn get_config(state: tauri::State<'_, AppState>, key: &str) -> Result<String, String> {
+    let db = &state.db;
+
+    let config: Config = sqlx::query_as::<_, Config>("SELECT * FROM config WHERE key = ?1")
+        .bind(key)
+        .fetch_one(db)
+        .await
+        .map_err(|e| format!("Failed to get config {}: {}", key, e))?;
+
+    Ok(config.value)
+}
+
+#[tauri::command]
+async fn update_config(state: tauri::State<'_, AppState>, key: &str, value: &str) -> Result<(), String> {
+    let db = &state.db;
+
+    let current_time = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
+
+    sqlx::query("UPDATE config SET value = ?1, updated_at = ?2 WHERE key = ?3")
+        .bind(value)
+        .bind(current_time)
+        .bind(key)
+        .execute(db)
+        .await
+        .map_err(|e| format!("Failed to update config {}: {}", key, e))?;
+
+    Ok(())
 }

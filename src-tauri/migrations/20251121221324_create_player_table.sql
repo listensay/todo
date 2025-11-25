@@ -14,6 +14,3 @@ CREATE TABLE player (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Insert default player
-INSERT INTO player (id, nickname, avatar, level, exp, title)
-VALUES (1, '冒险家', 'default', 1, 0, '新手冒险者');

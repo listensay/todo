@@ -1,4 +1,5 @@
 import { TypeTodoItemProps } from "@/types/todo"
+import { ConfigKey } from "@/types/config"
 import { invoke } from "@tauri-apps/api/core"
 import { notifications } from "@mantine/notifications";
 
@@ -83,6 +84,41 @@ export const fetchUpdateTodo = async (todo: TypeTodoItemProps) => {
     console.log('更新数据失败', error)
     notifications.show({
       title: '更新待办失败',
+      message: `Error: ${error}`,
+      color: 'red',
+      autoClose: 3000,
+      position: 'top-center'
+    })
+  }
+}
+
+// ==================== Config Services ====================
+
+export const fetchGetConfig = async (key: ConfigKey | string) => {
+  try {
+    const result = await invoke<string>('get_config', { key })
+    return result
+  } catch (error) {
+    console.log('获取配置失败', error)
+    notifications.show({
+      title: '获取配置失败',
+      message: `Error: ${error}`,
+      color: 'red',
+      autoClose: 3000,
+      position: 'top-center'
+    })
+    return null
+  }
+}
+
+export const fetchUpdateConfig = async (key: ConfigKey | string, value: string) => {
+  try {
+    const result = await invoke('update_config', { key, value })
+    return result
+  } catch (error) {
+    console.log('更新配置失败', error)
+    notifications.show({
+      title: '更新配置失败',
       message: `Error: ${error}`,
       color: 'red',
       autoClose: 3000,
