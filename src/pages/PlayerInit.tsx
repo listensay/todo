@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { TextInput, Avatar, Button } from '@mantine/core';
-import { IconUser, IconCamera } from '@tabler/icons-react';
+import { IconUser } from '@tabler/icons-react';
 import { fetchUpdateConfig } from '@/service';
 import { fetchCreatePlayer } from '@/service/player';
 import { ConfigKey } from '@/types/config';
