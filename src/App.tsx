@@ -54,11 +54,11 @@ function App() {
     <main className=" h-[100vh] p-4">
       <LayoutHeader />
       <div className="flex justify-between">
-        <div className="flex-1 m-4 mt-0 mr-0 rounded-sm">
-          <LayoutMain />
-        </div>
-        <div className="mx-6 bg-white w-72 app-card ">
+        <div className="ml-6 mr-2 w-72">
           <LayoutSide />
+        </div>
+        <div className="flex-1 m-4 mt-0">
+          <LayoutMain />
         </div>
       </div>
     </main>
