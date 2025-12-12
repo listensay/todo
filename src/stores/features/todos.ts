@@ -1,5 +1,6 @@
-import { TypeTodoItemProps } from '@/types/todo';
+import { TypeTodoItemProps, TypeEnumStatus, DIFFICULTY_CONFIG } from '@/types/todo';
 import { fetchAddTodo, fetchDeleteTodo, fetchGetTodos, fetchUpdateTodo } from '@/service';
+import { fetchAddExp } from '@/service/player';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 export const getTodos = createAsyncThunk('todos/getTodos', async () => {
@@ -20,6 +21,13 @@ export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (id: number
 
 export const updateTodo = createAsyncThunk('todos/updateTodo', async (todo: TypeTodoItemProps) => {
   await fetchUpdateTodo(todo)
+
+  // 如果任务完成，增加经验值
+  if (todo.status === TypeEnumStatus.Complete) {
+    const exp = DIFFICULTY_CONFIG[todo.difficulty]?.exp || 0
+    await fetchAddExp(exp)
+  }
+
   return await fetchGetTodos()
 }) 
 

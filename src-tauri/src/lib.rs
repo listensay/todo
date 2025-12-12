@@ -23,6 +23,7 @@ pub fn run() {
             create_player,
             update_player,
             add_exp,
+            get_dashboard_stats,
             get_config,
             update_config
         ])
@@ -250,6 +251,9 @@ async fn add_exp(state: tauri::State<'_, AppState>, exp_amount: u32) -> Result<P
     // 增加经验值
     player.exp += exp_amount;
 
+    // 增加完成任务计数
+    player.total_tasks_completed += 1;
+
     // 计算升级 (简单升级公式：每级需要 level * 100 经验)
     let exp_for_next_level = (player.level as u32) * 100;
     if player.exp >= exp_for_next_level {
@@ -259,15 +263,41 @@ async fn add_exp(state: tauri::State<'_, AppState>, exp_amount: u32) -> Result<P
 
     // 更新数据库
     let current_time = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
-    sqlx::query("UPDATE player SET level = ?1, exp = ?2, updated_at = ?3 WHERE id = 1")
+    sqlx::query("UPDATE player SET level = ?1, exp = ?2, total_tasks_completed = ?3, updated_at = ?4 WHERE id = 1")
         .bind(player.level)
         .bind(player.exp)
+        .bind(player.total_tasks_completed)
         .bind(current_time)
         .execute(db)
         .await
         .map_err(|e| format!("Failed to update player exp: {}", e))?;
 
     Ok(player)
+}
+
+// ==================== Dashboard System ====================
+
+#[derive(Debug, Serialize, Deserialize)]
+struct DashboardStats {
+    total_tasks_completed: u32,
+    streak_days: u16,
+    coins: u32,
+}
+
+#[tauri::command]
+async fn get_dashboard_stats(state: tauri::State<'_, AppState>) -> Result<DashboardStats, String> {
+    let db = &state.db;
+
+    let player: Player = sqlx::query_as::<_, Player>("SELECT * FROM player WHERE id = 1")
+        .fetch_one(db)
+        .await
+        .map_err(|e| format!("Failed to get dashboard stats: {}", e))?;
+
+    Ok(DashboardStats {
+        total_tasks_completed: player.total_tasks_completed,
+        streak_days: player.streak_days,
+        coins: player.coins,
+    })
 }
 
 // ==================== Config System ====================

@@ -7,18 +7,33 @@ import { getLevelProgress, getExpForNextLevel, getTitleForLevel } from '@/types/
 import { notifications } from '@mantine/notifications'
 import { CompletedTodosModal } from '../CompletedTodosModal'
 import { useDisclosure } from '@mantine/hooks'
+import { fetchGetDashboardStats } from "@/service/index";
+import { DashboardStats } from "@/types/dashboard";
 
 const LayoutSide = memo(() => {
   const dispatch = useDispatch()
   const player = useSelector((state: any) => state.player.player)
   const loading = useSelector((state: any) => state.player.loading)
+  const todos = useSelector((state: any) => state.todos.list)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
   const [opened, { open, close }] = useDisclosure(false)
+  const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(
+    null
+  );
 
   useEffect(() => {
-    dispatch(getPlayer() as any)
-  }, [dispatch])
+    dispatch(getPlayer() as any);
+  }, [dispatch, todos]);
+
+  // 获取 Dashboard 统计数据，当 todos 变化时刷新
+  useEffect(() => {
+    const loadDashboardStats = async () => {
+      const stats = await fetchGetDashboardStats();
+      setDashboardStats(stats);
+    };
+    loadDashboardStats();
+  }, [todos]);
 
   // 触发文件选择
   const handleAvatarClick = () => {
@@ -77,75 +92,112 @@ const LayoutSide = memo(() => {
       <div className="p-6">
         {/* Avatar Section */}
         <div className="flex flex-col items-center mb-6">
-            <div className="relative group mb-3">
+          <div className="relative mb-3 group">
             <Avatar
-                src={player.avatar}
-                alt={player.nickname}
-                size={80} 
-                radius={0}
-                className="transition-opacity cursor-pointer group-hover:opacity-70 border-2 border-black"
-                onClick={handleAvatarClick}
+              src={player.avatar}
+              alt={player.nickname}
+              size={80}
+              radius={0}
+              className="transition-opacity border-2 border-black cursor-pointer group-hover:opacity-70"
+              onClick={handleAvatarClick}
             />
-            <Tooltip label="点击更换头像" position="top" withArrow={false} radius={0} className="border-2 border-black text-black bg-white">
-                <ActionIcon
+            <Tooltip
+              label="点击更换头像"
+              position="top"
+              withArrow={false}
+              radius={0}
+              className="text-black bg-white border-2 border-black"
+            >
+              <ActionIcon
                 size="sm"
                 radius={0}
                 variant="filled"
                 color="dark"
-                className="absolute transition-opacity opacity-0 -bottom-2 -right-2 group-hover:opacity-100 z-10 border-2 border-black"
+                className="absolute z-10 transition-opacity border-2 border-black opacity-0 -bottom-2 -right-2 group-hover:opacity-100"
                 onClick={handleAvatarClick}
                 loading={uploading}
-                >
+              >
                 <IconCamera size={14} />
-                </ActionIcon>
+              </ActionIcon>
             </Tooltip>
-            </div>
-            
-            <input ref={fileInputRef} type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
+          </div>
 
-            <div className="text-center w-full">
-                <div>{player.nickname}</div>
-                <Badge color="blue" variant="outline" size="sm" radius={0} className="border border-black text-black bg-blue-200 mb-2">Lv.{player.level}</Badge>
-                <div className="mb-2 text-sm">{title}</div>
-                 <div className="w-full">
-                    <Progress value={progressPercentage} color="cyan" radius={0} size="sm" classNames={{ section: 'border-r-2 border-black', root: 'border-2 border-black bg-white' }} />
-                    <div className="text-xs mt-2 text-right">{player.exp} / {expForNextLevel} EXP</div>
-                </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleAvatarChange}
+            className="hidden"
+          />
+
+          <div className="w-full text-center">
+            <div>{player.nickname}</div>
+            <Badge
+              color="blue"
+              variant="outline"
+              size="sm"
+              radius={0}
+              className="mb-2 text-black bg-blue-200 border border-black"
+            >
+              Lv.{player.level}
+            </Badge>
+            <div className="mb-2 text-sm">{title}</div>
+            <div className="w-full">
+              <Progress
+                value={progressPercentage}
+                color="cyan"
+                radius={0}
+                size="sm"
+                classNames={{
+                  section: "border-r-2 border-black",
+                  root: "border-2 border-black bg-white",
+                }}
+              />
+              <div className="mt-2 text-xs text-right">
+                {player.exp} / {expForNextLevel} EXP
+              </div>
             </div>
+          </div>
         </div>
 
         <Divider my="sm" color="black" />
 
-        {/* Stats Grid */}
+        {/* Dashboard */}
         <div className="flex justify-between gap-2 py-2">
-            <div className="flex-1 bg-white p-2 border-2 border-black app-card-ns flex flex-col items-center justify-center">
-                <div className="text-xl mb-1">✅</div>
-                <div className="text-xs text-gray-500 mb-1">任务</div>
-                <div className="font-bold text-lg">{player.total_tasks_completed}</div>
+          <div className="flex flex-col items-center justify-center flex-1 p-2 bg-white border-2 border-black app-card-ns">
+            <div className="mb-1 text-xl">✅</div>
+            <div className="mb-1 text-xs text-gray-500">任务</div>
+            <div className="text-lg font-bold">
+              {dashboardStats?.total_tasks_completed ?? 0}
             </div>
-            <div className="flex-1 bg-white p-2 border-2 border-black app-card-ns flex flex-col items-center justify-center">
-                <div className="text-xl mb-1">🔥</div>
-                <div className="text-xs text-gray-500 mb-1">连胜</div>
-                <div className="font-bold text-lg">{player.streak_days}</div>
+          </div>
+          <div className="flex flex-col items-center justify-center flex-1 p-2 bg-white border-2 border-black app-card-ns">
+            <div className="mb-1 text-xl">🔥</div>
+            <div className="mb-1 text-xs text-gray-500">连胜</div>
+            <div className="text-lg font-bold">
+              {dashboardStats?.streak_days ?? 0}
             </div>
-            <div className="flex-1 bg-white p-2 border-2 border-black app-card-ns flex flex-col items-center justify-center">
-                <div className="text-xl mb-1">💰</div>
-                <div className="text-xs text-gray-500 mb-1">金币</div>
-                <div className="font-bold text-lg text-orange-500">{player.coins}</div>
+          </div>
+          <div className="flex flex-col items-center justify-center flex-1 p-2 bg-white border-2 border-black app-card-ns">
+            <div className="mb-1 text-xl">💰</div>
+            <div className="mb-1 text-xs text-gray-500">金币</div>
+            <div className="text-lg font-bold text-orange-500">
+              {dashboardStats?.coins ?? 0}
             </div>
+          </div>
         </div>
-        
+
         <Divider my="sm" color="black" />
-        
-        <Button 
-            fullWidth 
-            color="dark" 
-            variant="outline" 
-            className="border-2 border-black text-black hover:bg-gray-100 transition-colors"
-            radius={0}
-            onClick={open}
+
+        <Button
+          fullWidth
+          color="dark"
+          variant="outline"
+          className="text-black transition-colors border-2 border-black hover:bg-gray-100"
+          radius={0}
+          onClick={open}
         >
-            已完成待办
+          已完成待办
         </Button>
       </div>
 

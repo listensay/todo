@@ -1,5 +1,6 @@
 import { TypeTodoItemProps } from "@/types/todo"
 import { ConfigKey } from "@/types/config"
+import { DashboardStats } from "@/types/dashboard"
 import { invoke } from "@tauri-apps/api/core"
 import { notifications } from "@mantine/notifications";
 
@@ -92,8 +93,6 @@ export const fetchUpdateTodo = async (todo: TypeTodoItemProps) => {
   }
 }
 
-// ==================== Config Services ====================
-
 export const fetchGetConfig = async (key: ConfigKey | string) => {
   try {
     const result = await invoke<string>('get_config', { key })
@@ -124,5 +123,22 @@ export const fetchUpdateConfig = async (key: ConfigKey | string, value: string) 
       autoClose: 3000,
       position: 'top-center'
     })
+  }
+}
+
+export const fetchGetDashboardStats = async (): Promise<DashboardStats | null> => {
+  try {
+    const result = await invoke<DashboardStats>('get_dashboard_stats')
+    return result
+  } catch (error) {
+    console.log('获取 Dashboard 统计失败', error)
+    notifications.show({
+      title: '获取统计数据失败',
+      message: `Error: ${error}`,
+      color: 'red',
+      autoClose: 3000,
+      position: 'top-center'
+    })
+    return null
   }
 }
