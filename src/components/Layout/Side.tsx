@@ -1,10 +1,12 @@
 import { memo, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getPlayer, updatePlayer } from '@/stores/features/player'
-import { Avatar, Progress, Badge, ActionIcon, Tooltip, Divider } from '@mantine/core'
+import { Avatar, Progress, Badge, ActionIcon, Tooltip, Divider, Button } from '@mantine/core'
 import { IconCamera } from '@tabler/icons-react'
 import { getLevelProgress, getExpForNextLevel, getTitleForLevel } from '@/types/player'
 import { notifications } from '@mantine/notifications'
+import { CompletedTodosModal } from '../CompletedTodosModal'
+import { useDisclosure } from '@mantine/hooks'
 
 const LayoutSide = memo(() => {
   const dispatch = useDispatch()
@@ -12,6 +14,7 @@ const LayoutSide = memo(() => {
   const loading = useSelector((state: any) => state.player.loading)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [uploading, setUploading] = useState(false)
+  const [opened, { open, close }] = useDisclosure(false)
 
   useEffect(() => {
     dispatch(getPlayer() as any)
@@ -131,7 +134,22 @@ const LayoutSide = memo(() => {
                 <div className="font-bold text-lg text-orange-500">{player.coins}</div>
             </div>
         </div>
+        
+        <Divider my="sm" color="black" />
+        
+        <Button 
+            fullWidth 
+            color="dark" 
+            variant="outline" 
+            className="border-2 border-black text-black hover:bg-gray-100 transition-colors"
+            radius={0}
+            onClick={open}
+        >
+            已完成待办
+        </Button>
       </div>
+
+      <CompletedTodosModal opened={opened} onClose={close} />
     </div>
   );
 })
