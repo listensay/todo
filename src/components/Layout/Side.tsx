@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getPlayer, updatePlayer } from '@/stores/features/player'
-import { Avatar, Group, Text, Progress, Badge, ActionIcon, Tooltip, Divider } from '@mantine/core'
+import { Avatar, Progress, Badge, ActionIcon, Tooltip, Divider } from '@mantine/core'
 import { IconCamera } from '@tabler/icons-react'
 import { getLevelProgress, getExpForNextLevel, getTitleForLevel } from '@/types/player'
 import { notifications } from '@mantine/notifications'
@@ -101,17 +101,12 @@ const LayoutSide = memo(() => {
             <input ref={fileInputRef} type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
 
             <div className="text-center w-full">
-                <Group justify="center" gap="xs" mb={4}>
-                    <Text fw={700} size="xl">{player.nickname}</Text>
-                    <Badge color="blue" variant="filled" size="sm" radius={0} className="border border-black text-black bg-blue-200">Lv.{player.level}</Badge>
-                </Group>
-                <Text size="sm" c="dimmed" mb={8}>{title}</Text>
-                
+                <div>{player.nickname}</div>
+                <Badge color="blue" variant="outline" size="sm" radius={0} className="border border-black text-black bg-blue-200 mb-2">Lv.{player.level}</Badge>
+                <div className="mb-2 text-sm">{title}</div>
                  <div className="w-full">
                     <Progress value={progressPercentage} color="cyan" radius={0} size="sm" classNames={{ section: 'border-r-2 border-black', root: 'border-2 border-black bg-white' }} />
-                    <Text size="xs" c="dimmed" mt={4} ta="right">
-                        {player.exp} / {expForNextLevel} EXP
-                    </Text>
+                    <div className="text-xs mt-2 text-right">{player.exp} / {expForNextLevel} EXP</div>
                 </div>
             </div>
         </div>
@@ -119,20 +114,21 @@ const LayoutSide = memo(() => {
         <Divider my="sm" color="black" />
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 gap-4 py-2">
-            <div className="bg-white p-3 border-2 border-black app-card-ns">
-                <Text size="xs" c="dimmed" mb={2}>任务完成</Text>
-                <Text fw={700} size="lg">{player.total_tasks_completed}</Text>
+        <div className="flex justify-between gap-2 py-2">
+            <div className="flex-1 bg-white p-2 border-2 border-black app-card-ns flex flex-col items-center justify-center">
+                <div className="text-xl mb-1">✅</div>
+                <div className="text-xs text-gray-500 mb-1">任务</div>
+                <div className="font-bold text-lg">{player.total_tasks_completed}</div>
             </div>
-            <div className="bg-white p-3 border-2 border-black app-card-ns">
-                <Text size="xs" c="dimmed" mb={2}>连续天数</Text>
-                <Text fw={700} size="lg">{player.streak_days}</Text>
+            <div className="flex-1 bg-white p-2 border-2 border-black app-card-ns flex flex-col items-center justify-center">
+                <div className="text-xl mb-1">🔥</div>
+                <div className="text-xs text-gray-500 mb-1">连胜</div>
+                <div className="font-bold text-lg">{player.streak_days}</div>
             </div>
-            <div className="bg-white p-3 border-2 border-black app-card-ns">
-                <Text size="xs" c="dimmed" mb={2} color="orange">金币</Text>
-                 <Group gap={4}>
-                    <Text fw={700} size="lg" c="orange">{player.coins}</Text>
-                 </Group>
+            <div className="flex-1 bg-white p-2 border-2 border-black app-card-ns flex flex-col items-center justify-center">
+                <div className="text-xl mb-1">💰</div>
+                <div className="text-xs text-gray-500 mb-1">金币</div>
+                <div className="font-bold text-lg text-orange-500">{player.coins}</div>
             </div>
         </div>
       </div>
