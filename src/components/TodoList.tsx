@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useMemo, memo } from "react";
 import TodoListBox from "./TodoListBox";
-import { TypeTodoItemProps } from "@/types/todo";
+import { TypeEnumStatus, TypeTodoItemProps } from "@/types/todo";
 
 function TodoList() {
   // 只选择 list，而不是整个 todos 对象
@@ -10,7 +10,7 @@ function TodoList() {
   // 使用 useMemo 缓存过滤结果
   const filteredList = useMemo(() => {
     console.log("list", list);
-    return list.filter((item: TypeTodoItemProps) => item.status);
+    return list.filter((item: TypeTodoItemProps) => item.status === TypeEnumStatus.Incomplete);
   }, [list]);
 
   return (

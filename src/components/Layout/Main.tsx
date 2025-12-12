@@ -18,7 +18,7 @@ function LayoutMain() {
     mode: "controlled",
     initialValues: {
       name: "",
-      difficulty: "",
+      difficulty: "Normal",
     },
     validate: {
       name: (value) => (value.length < 2 ? "请输入任务名称" : null),
@@ -55,12 +55,12 @@ function LayoutMain() {
     <>
       <div className="flex items-center justify-between mb-4">
         <form
-          className="flex items-center justify-center"
+          className="flex items-center justify-center w-full"
           onSubmit={form.onSubmit((values) => submit(values))}
         >
           <TextInput
             placeholder="输入新任务"
-            className="mr-2 w-72"
+            className="flex-1 w-full mr-2"
             {...form.getInputProps("name")}
             withAsterisk
           />

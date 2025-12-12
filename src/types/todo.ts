@@ -7,7 +7,7 @@ export interface TypeTodoItemProps {
   created_at?: string;
 }
 
-enum TypeEnumStatus {
+export enum TypeEnumStatus {
   Incomplete = "Incomplete",
   Complete = "Complete",
   Pending = "Pending",
