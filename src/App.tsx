@@ -31,20 +31,6 @@ function App() {
     checkInitialization();
   }, []);
 
-  // 窗口获得焦点时重新检查（用于开发调试，可检测到数据库手动修改）
-  useEffect(() => {
-    const handleFocus = () => {
-      console.log('窗口获得焦点，重新检查初始化状态');
-      checkInitialization();
-    };
-
-    window.addEventListener('focus', handleFocus);
-
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-    };
-  }, []);
-
   const handleInitComplete = () => {
     setIsInitialized(true);
   };

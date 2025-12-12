@@ -103,7 +103,7 @@ const LayoutHeader = memo(() => {
   const title = getTitleForLevel(player.level)
 
   return (
-    <div className="bg-white rounded-sm p-4 app-card mb-4">
+    <div className="p-4 m-4 bg-white rounded-sm app-card">
       <Group justify="space-between" align="flex-start">
         <Group align="flex-start">
           <div className="relative group">
@@ -112,14 +112,14 @@ const LayoutHeader = memo(() => {
               alt={player.nickname}
               size={64}
               radius="md"
-              className="cursor-pointer transition-opacity group-hover:opacity-70"
+              className="transition-opacity cursor-pointer group-hover:opacity-70"
               onClick={handleAvatarClick}
             />
             <Tooltip label="点击更换头像" position="top">
               <ActionIcon
                 size="xs"
                 radius="md"
-                className="absolute -bottom-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute transition-opacity opacity-0 -bottom-1 -right-1 group-hover:opacity-100"
                 onClick={handleAvatarClick}
                 loading={uploading}
               >
@@ -190,7 +190,7 @@ const LayoutHeader = memo(() => {
         </Group>
       </Group>
     </div>
-  )
+  );
 })
 
 LayoutHeader.displayName = 'LayoutHeader'
