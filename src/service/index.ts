@@ -27,13 +27,6 @@ export const fetchAddTodo = async (todo: TypeTodoItemProps) => {
       name: todo.name,
       difficulty: todo.difficulty
     })
-    notifications.show({
-      title: 'Add Todo',
-      message: 'Add Todo Success',
-      color: 'green',
-      autoClose: 2000,
-      position: 'top-center'
-    })
     return result
   } catch (error) {
     console.log('添加数据失败', error)
@@ -50,13 +43,6 @@ export const fetchAddTodo = async (todo: TypeTodoItemProps) => {
 export const fetchDeleteTodo = async (id: number) => {
   try {
     const result = await invoke('delete_todo', { id })
-    notifications.show({
-      title: 'Delete Todo',
-      message: 'Delete Todo Success',
-      color: 'green',
-      autoClose: 2000,
-      position: 'top-center'
-    })
     return result
   } catch (error) {
     console.log('删除数据失败', error)
@@ -73,13 +59,6 @@ export const fetchDeleteTodo = async (id: number) => {
 export const fetchUpdateTodo = async (todo: TypeTodoItemProps) => {
   try {
     const result = await invoke('update_todo', { todo })
-    notifications.show({
-      title: 'Update Todo',
-      message: 'Update Todo Success',
-      color: 'green',
-      autoClose: 2000,
-      position: 'top-center'
-    })
     return result
   } catch (error) {
     console.log('更新数据失败', error)

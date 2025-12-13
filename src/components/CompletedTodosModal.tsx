@@ -1,11 +1,12 @@
 import { Modal, ScrollArea } from "@mantine/core";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   TypeTodoItemProps,
   TypeEnumStatus,
   DIFFICULTY_CONFIG,
 } from "@/types/todo";
-import { IconCheck } from "@tabler/icons-react";
+import { IconCheck, IconTrash } from "@tabler/icons-react";
+import { updateTodo, deleteTodo } from "@/stores/features/todos";
 
 interface CompletedTodosModalProps {
   opened: boolean;
@@ -16,17 +17,28 @@ export function CompletedTodosModal({
   opened,
   onClose,
 }: CompletedTodosModalProps) {
+  const dispatch = useDispatch();
   const todos = useSelector((state: any) => state.todos.list);
 
   const completedList = todos.filter(
     (item: TypeTodoItemProps) => item.status === TypeEnumStatus.Complete
   );
 
+  const handleUncomplete = (e: React.MouseEvent, item: TypeTodoItemProps) => {
+    e.stopPropagation();
+    dispatch(updateTodo({ ...item, status: TypeEnumStatus.Incomplete }) as any);
+  };
+
+  const handleDelete = (e: React.MouseEvent, id: number) => {
+    e.stopPropagation();
+    dispatch(deleteTodo(id) as any);
+  };
+
   return (
     <Modal
       opened={opened}
       onClose={onClose}
-      title="已完成待办"
+      title="已完成"
       centered
       radius={0}
       classNames={{
@@ -45,7 +57,11 @@ export function CompletedTodosModal({
                 className="flex items-center justify-between p-3 transition-colors border-2 border-black bg-gray-50 hover:bg-gray-100"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-5 h-5 bg-white border-2 border-black">
+                  <div
+                    className="flex items-center justify-center w-5 h-5 bg-white border-2 border-black cursor-pointer hover:bg-gray-200"
+                    onClick={(e) => handleUncomplete(e, item)}
+                    title="点击取消完成"
+                  >
                     <IconCheck size={14} color="black" stroke={3} />
                   </div>
                   <div>
@@ -57,14 +73,23 @@ export function CompletedTodosModal({
                     </div>
                   </div>
                 </div>
-                <div
-                  className="px-2 py-0.5 text-xs font-bold border border-black bg-white"
-                  style={{
-                    color: DIFFICULTY_CONFIG[item.difficulty].color,
-                    borderColor: DIFFICULTY_CONFIG[item.difficulty].color,
-                  }}
-                >
-                  +{DIFFICULTY_CONFIG[item.difficulty].exp} EXP
+                <div className="flex items-center gap-2">
+                  <div
+                    className="px-2 py-0.5 text-xs font-bold border border-black bg-white"
+                    style={{
+                      color: DIFFICULTY_CONFIG[item.difficulty].color,
+                      borderColor: DIFFICULTY_CONFIG[item.difficulty].color,
+                    }}
+                  >
+                    +{DIFFICULTY_CONFIG[item.difficulty].exp} EXP
+                  </div>
+                  <div
+                    className="p-1 transition-colors border border-black rounded cursor-pointer hover:bg-red-100"
+                    onClick={(e) => handleDelete(e, item.id)}
+                    title="删除"
+                  >
+                    <IconTrash size={16} color="#ef4444" />
+                  </div>
                 </div>
               </div>
             ))
