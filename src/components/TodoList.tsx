@@ -15,7 +15,7 @@ function TodoList() {
 
   return (
     <>
-      <div className="w-full overflow-y-scroll h-[565px]">
+      <div className="w-full overflow-y-scroll h-[650px]">
         <TodoListBox list={filteredList} />
       </div>
     </>

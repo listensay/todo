@@ -57,7 +57,7 @@ function App() {
         <div className="ml-6 mr-2 w-72">
           <LayoutSide />
         </div>
-        <div className="flex-1 m-4 mt-0">
+        <div className="flex-1 p-4 mx-4 bg-white app-card">
           <LayoutMain />
         </div>
       </div>

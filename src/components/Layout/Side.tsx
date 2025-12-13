@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getPlayer, updatePlayer } from '@/stores/features/player'
 import { Avatar, Progress, Badge, ActionIcon, Tooltip, Divider, Button } from '@mantine/core'
 import { IconCamera } from '@tabler/icons-react'
-import { getLevelProgress, getExpForNextLevel, getTitleForLevel } from '@/types/player'
+import { getLevelProgress, getTitleForLevel } from "@/types/player";
 import { notifications } from '@mantine/notifications'
 import { CompletedTodosModal } from '../CompletedTodosModal'
 import { useDisclosure } from '@mantine/hooks'
@@ -83,9 +83,8 @@ const LayoutSide = memo(() => {
     return <div className="p-4 text-center text-gray-500">加载中...</div>
   }
 
-  const progressPercentage = getLevelProgress(player.exp, player.level)
-  const expForNextLevel = getExpForNextLevel(player.level)
-  const title = getTitleForLevel(player.level)
+  const progressPercentage = getLevelProgress(player.exp, player.level);
+  const title = getTitleForLevel(player.level);
 
   return (
     <div className="flex flex-col h-full bg-white app-card">
@@ -153,9 +152,6 @@ const LayoutSide = memo(() => {
                   root: "border-2 border-black bg-white",
                 }}
               />
-              <div className="mt-2 text-xs text-right">
-                {player.exp} / {expForNextLevel} EXP
-              </div>
             </div>
           </div>
         </div>
@@ -197,7 +193,7 @@ const LayoutSide = memo(() => {
           radius={0}
           onClick={open}
         >
-          已完成待办
+          已完成
         </Button>
       </div>
 
