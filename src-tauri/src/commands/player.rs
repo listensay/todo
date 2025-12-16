@@ -11,8 +11,6 @@ pub struct Player {
     pub avatar: String,
     pub level: u16,
     pub exp: u32,
-    pub total_tasks_completed: u32,
-    pub streak_days: u16,
     pub last_login_date: Option<String>,
     pub coins: u32,
     pub title: String,
@@ -43,7 +41,7 @@ pub async fn create_player(
     let current_time = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
 
     sqlx::query(
-        "INSERT INTO player (id, nickname, avatar, level, exp, total_tasks_completed, streak_days, coins, title, created_at, updated_at) VALUES (1, ?1, ?2, 1, 0, 0, 0, 0, '新手冒险者', ?3, ?4)",
+        "INSERT INTO player (id, nickname, avatar, level, exp, coins, title, created_at, updated_at) VALUES (1, ?1, ?2, 1, 0, 0, '新手冒险者', ?3, ?4)",
     )
     .bind(nickname)
     .bind(avatar)
@@ -71,14 +69,12 @@ pub async fn update_player(
     let current_time = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
 
     sqlx::query(
-        "UPDATE player SET nickname = ?1, avatar = ?2, level = ?3, exp = ?4, total_tasks_completed = ?5, streak_days = ?6, last_login_date = ?7, coins = ?8, title = ?9, updated_at = ?10 WHERE id = 1",
+        "UPDATE player SET nickname = ?1, avatar = ?2, level = ?3, exp = ?4, last_login_date = ?5, coins = ?6, title = ?7, updated_at = ?8 WHERE id = 1",
     )
     .bind(player.nickname)
     .bind(player.avatar)
     .bind(player.level)
     .bind(player.exp)
-    .bind(player.total_tasks_completed)
-    .bind(player.streak_days)
     .bind(player.last_login_date)
     .bind(player.coins)
     .bind(player.title)

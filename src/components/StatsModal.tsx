@@ -24,9 +24,6 @@ export function StatsModal({ opened, onClose }: StatsModalProps) {
     >
       <ScrollArea>
         <div className="py-2">
-          <div className="mb-4 text-sm text-gray-600">
-            统计每天添加和完成的待办数量
-          </div>
           <ContributionCalendar />
         </div>
       </ScrollArea>
