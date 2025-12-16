@@ -7,7 +7,6 @@ import { getLevelProgress, getTitleForLevel } from "@/types/player";
 import { notifications } from '@mantine/notifications'
 import { CompletedTodosModal } from '../CompletedTodosModal'
 import { StatsModal } from "../StatsModal";
-import { ContributionCalendar } from "../ContributionCalendar";
 import { useDisclosure } from "@mantine/hooks";
 import { fetchGetDashboardStats } from "@/service/index";
 import { DashboardStats } from "@/types/dashboard";

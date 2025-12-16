@@ -4,8 +4,6 @@ export interface Player {
   avatar: string;
   level: number;
   exp: number;
-  total_tasks_completed: number;
-  streak_days: number;
   last_login_date?: string;
   coins: number;
   title: string;
