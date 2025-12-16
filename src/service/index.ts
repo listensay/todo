@@ -1,6 +1,7 @@
 import { TypeTodoItemProps } from "@/types/todo"
 import { ConfigKey } from "@/types/config"
 import { DashboardStats } from "@/types/dashboard"
+import { CalendarData } from "@/types/calendar"
 import { invoke } from "@tauri-apps/api/core"
 import { notifications } from "@mantine/notifications";
 
@@ -118,6 +119,16 @@ export const fetchGetDashboardStats = async (): Promise<DashboardStats | null> =
       autoClose: 3000,
       position: 'top-center'
     })
+    return null
+  }
+}
+
+export const fetchGetCalendarData = async (): Promise<CalendarData | null> => {
+  try {
+    const result = await invoke<CalendarData>('get_calendar_data')
+    return result
+  } catch (error) {
+    console.log('获取日历数据失败', error)
     return null
   }
 }

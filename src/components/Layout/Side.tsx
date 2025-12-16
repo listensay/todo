@@ -6,18 +6,22 @@ import { IconCamera } from '@tabler/icons-react'
 import { getLevelProgress, getTitleForLevel } from "@/types/player";
 import { notifications } from '@mantine/notifications'
 import { CompletedTodosModal } from '../CompletedTodosModal'
-import { useDisclosure } from '@mantine/hooks'
+import { StatsModal } from "../StatsModal";
+import { ContributionCalendar } from "../ContributionCalendar";
+import { useDisclosure } from "@mantine/hooks";
 import { fetchGetDashboardStats } from "@/service/index";
 import { DashboardStats } from "@/types/dashboard";
 
 const LayoutSide = memo(() => {
-  const dispatch = useDispatch()
-  const player = useSelector((state: any) => state.player.player)
-  const loading = useSelector((state: any) => state.player.loading)
-  const todos = useSelector((state: any) => state.todos.list)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const [uploading, setUploading] = useState(false)
-  const [opened, { open, close }] = useDisclosure(false)
+  const dispatch = useDispatch();
+  const player = useSelector((state: any) => state.player.player);
+  const loading = useSelector((state: any) => state.player.loading);
+  const todos = useSelector((state: any) => state.todos.list);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [opened, { open, close }] = useDisclosure(false);
+  const [statsOpened, { open: openStats, close: closeStats }] =
+    useDisclosure(false);
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(
     null
   );
@@ -37,50 +41,72 @@ const LayoutSide = memo(() => {
 
   // 触发文件选择
   const handleAvatarClick = () => {
-    fileInputRef.current?.click()
-  }
+    fileInputRef.current?.click();
+  };
 
   // 处理头像文件选择
-  const handleAvatarChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
+  const handleAvatarChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
     // 验证文件类型
-    if (!file.type.startsWith('image/')) {
-      notifications.show({ title: '文件格式错误', message: '请选择图片文件', color: 'red', position: 'top-center' })
-      return
+    if (!file.type.startsWith("image/")) {
+      notifications.show({
+        title: "文件格式错误",
+        message: "请选择图片文件",
+        color: "red",
+        position: "top-center",
+      });
+      return;
     }
 
     // 验证文件大小（限制为 2MB）
     if (file.size > 2 * 1024 * 1024) {
-      notifications.show({ title: '文件过大', message: '图片大小不能超过 2MB', color: 'red', position: 'top-center' })
-      return
+      notifications.show({
+        title: "文件过大",
+        message: "图片大小不能超过 2MB",
+        color: "red",
+        position: "top-center",
+      });
+      return;
     }
 
     // 转换为 base64
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onloadend = async () => {
-      const base64String = reader.result as string
-      setUploading(true)
+      const base64String = reader.result as string;
+      setUploading(true);
       try {
         if (player) {
-          const updatedPlayer = { ...player, avatar: base64String }
-          await dispatch(updatePlayer(updatedPlayer) as any)
-          notifications.show({ title: '头像已更新', message: '你的角色头像已成功更换', color: 'green', position: 'top-center' })
+          const updatedPlayer = { ...player, avatar: base64String };
+          await dispatch(updatePlayer(updatedPlayer) as any);
+          notifications.show({
+            title: "头像已更新",
+            message: "你的角色头像已成功更换",
+            color: "green",
+            position: "top-center",
+          });
         }
       } catch (error) {
-        console.error('更新头像失败:', error)
-        notifications.show({ title: '更新失败', message: '头像更新失败，请重试', color: 'red', position: 'top-center' })
+        console.error("更新头像失败:", error);
+        notifications.show({
+          title: "更新失败",
+          message: "头像更新失败，请重试",
+          color: "red",
+          position: "top-center",
+        });
       } finally {
-        setUploading(false)
-        if (fileInputRef.current) fileInputRef.current.value = ''
+        setUploading(false);
+        if (fileInputRef.current) fileInputRef.current.value = "";
       }
-    }
-    reader.readAsDataURL(file)
-  }
+    };
+    reader.readAsDataURL(file);
+  };
 
   if (loading || !player) {
-    return <div className="p-4 text-center text-gray-500">加载中...</div>
+    return <div className="p-4 text-center text-gray-500">加载中...</div>;
   }
 
   const progressPercentage = getLevelProgress(player.exp, player.level);
@@ -185,22 +211,37 @@ const LayoutSide = memo(() => {
 
         <Divider my="sm" color="black" />
 
-        <Button
-          fullWidth
-          color="dark"
-          variant="outline"
-          className="text-black transition-colors border-2 border-black hover:bg-gray-100"
-          radius={0}
-          onClick={open}
-        >
-          已完成
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            fullWidth
+            color="dark"
+            variant="outline"
+            className="text-black transition-colors border-2 border-black hover:bg-gray-100"
+            radius={0}
+            onClick={openStats}
+          >
+            统计
+          </Button>
+          <Button
+            fullWidth
+            color="dark"
+            variant="outline"
+            className="text-black transition-colors border-2 border-black hover:bg-gray-100"
+            radius={0}
+            onClick={open}
+          >
+            完成
+          </Button>
+        </div>
+
+        <Divider my="sm" color="black" />
       </div>
 
       <CompletedTodosModal opened={opened} onClose={close} />
+      <StatsModal opened={statsOpened} onClose={closeStats} />
     </div>
   );
-})
+});
 
 LayoutSide.displayName = 'LayoutSide'
 

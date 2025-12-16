@@ -4,8 +4,8 @@ use tauri::{App, Manager as _};
 mod commands;
 
 use commands::{
-    add_exp, add_todo, create_player, delete_todo, get_config, get_dashboard_stats, get_player,
-    get_todos, update_config, update_player, update_todo,
+    add_exp, add_todo, create_player, delete_todo, get_calendar_data, get_config,
+    get_dashboard_stats, get_player, get_todos, update_config, update_player, update_todo,
 };
 
 type Db = Pool<Sqlite>;
@@ -28,6 +28,7 @@ pub fn run() {
             update_player,
             add_exp,
             get_dashboard_stats,
+            get_calendar_data,
             get_config,
             update_config
         ])
